@@ -1,9 +1,10 @@
-import { SignUpYellow } from "./components";
+import { SignUpCreateAccount, SignUpYellow } from "./components";
 
 export default function SignUpPage() {
   return (
-    <div>
+    <div className="flex w-screen">
       <SignUpYellow />
+      <SignUpCreateAccount />
     </div>
   );
 }
