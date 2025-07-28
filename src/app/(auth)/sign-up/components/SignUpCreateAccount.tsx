@@ -1,8 +1,9 @@
 "use client";
 
 import { Formik, Form, FormikHelpers } from "formik";
-import UsernameField from "./UserNameField";
 import EmailPasswordFields from "./EmailPasswordField";
+import UsernameField from "./UsernameField";
+import { LoginButton } from "../../login/components/LoginButton";
 
 interface Values {
   firstName: string;
@@ -12,7 +13,11 @@ interface Values {
 
 export const SignUpCreateAccount = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-1/2 bg-gray-100 px-4">
+    <div className="flex flex-col items-center justify-center w-1/2 bg-gray-100 px-4 relative">
+      <div className="absolute top-10 right-10 ">
+        {" "}
+        <LoginButton />{" "}
+      </div>
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-md">
         <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">
           Create Your Account
