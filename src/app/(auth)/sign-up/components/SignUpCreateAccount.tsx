@@ -1,6 +1,8 @@
 "use client";
 
-import { Formik, Field, Form, FormikHelpers } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
+import UsernameField from "./UserNameField";
+import EmailPasswordFields from "./EmailPasswordField";
 
 interface Values {
   firstName: string;
@@ -31,56 +33,12 @@ export const SignUpCreateAccount = () => {
           ) => {
             setTimeout(() => {
               alert(JSON.stringify(values, null, 2));
-              // setSubmitting(false);
             }, 500);
           }}
         >
           <Form className="flex flex-col gap-4">
-            <div className="flex flex-col">
-              <label
-                htmlFor="firstName"
-                className="text-sm font-medium text-gray-700"
-              >
-                Username
-              </label>
-              <Field
-                id="firstName"
-                name="firstName"
-                placeholder="Enter username here"
-                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="lastName"
-                className="text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <Field
-                id="lastName"
-                name="lastName"
-                placeholder="Enter email here"
-                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <Field
-                id="email"
-                name="email"
-                placeholder="Enter password here"
-                type="email"
-                className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+            <UsernameField />
+            <EmailPasswordFields />
 
             <button
               type="submit"
