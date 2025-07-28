@@ -19,10 +19,11 @@ export const SignUpCreateAccount = () => {
         <LoginButton />{" "}
       </div>
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">
+        <h1 className="text-2xl font-bold mb-2 text-transparent bg-gradient-to-r from-orange-500 via-amber-400 to-lime-500 bg-clip-text">
           Create Your Account
         </h1>
-        <p className="text-sm text-gray-500 text-center mb-6">
+
+        <p className="text-sm text-gray-500  mb-6">
           Choose a username for your page
         </p>
 
