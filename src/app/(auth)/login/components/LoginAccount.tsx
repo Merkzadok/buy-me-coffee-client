@@ -1,12 +1,10 @@
 "use client";
 
 import { Formik, Form, FormikHelpers, Field } from "formik";
-import { LoginButton } from "../../login/components/LoginButton";
 import { SignUpButton } from "../../sign-up/components/SignUpButton";
 
 interface Values {
-  firstName: string;
-  lastName: string;
+  password: string;
   email: string;
 }
 
@@ -24,8 +22,7 @@ export const LoginAccount = () => {
 
         <Formik
           initialValues={{
-            firstName: "",
-            lastName: "",
+            password: "",
             email: "",
           }}
           onSubmit={(

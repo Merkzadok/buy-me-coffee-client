@@ -19,9 +19,9 @@ export const SignUpYellow = () => {
       <h3 className="text-2xl font-bold text-gray-800 mb-2 pt-2">
         Fund your creative work
       </h3>
-      <p className="text-shadow-cyan-100 text-sm leading-relaxed">
-        Accept support. Start a membership. Set up a shop. It's easier than you
-        think.
+      <p className="text-sm leading-relaxed">
+        Accept support. Start a membership. Set up a shop. It's easier{" "}
+        <span className="block text-center">than you think.</span>
       </p>
     </div>
   );
