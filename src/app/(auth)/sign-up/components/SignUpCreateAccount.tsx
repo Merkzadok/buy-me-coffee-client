@@ -4,6 +4,7 @@ import { Formik, Form, FormikHelpers } from "formik";
 import EmailPasswordFields from "./EmailPasswordField";
 import UsernameField from "./UsernameField";
 import { LoginButton } from "../../login/components/LoginButton";
+import { useState } from "react";
 
 interface Values {
   firstName: string;
@@ -12,6 +13,11 @@ interface Values {
 }
 
 export const SignUpCreateAccount = () => {
+  const [step, setStep] = useState(0);
+  const StepComponent = [
+    <UsernameField setStep={setStep} />,
+    <EmailPasswordFields setStep={setStep} />,
+  ];
   return (
     <div className="flex flex-col items-center justify-center w-1/2 bg-gray-100 px-4 relative">
       <div className="absolute top-10 right-10 ">
@@ -42,17 +48,7 @@ export const SignUpCreateAccount = () => {
             }, 500);
           }}
         >
-          <Form className="flex flex-col gap-4">
-            <UsernameField />
-            <EmailPasswordFields />
-
-            <button
-              type="submit"
-              className="mt-4 bg-black hover:bg-sky-100 text-white hover:text-black font-semibold py-2 px-4 rounded-md transition-colors cursor-pointer duration-200"
-            >
-              Continue
-            </button>
-          </Form>
+          <Form className="flex flex-col gap-4">{StepComponent[step]}</Form>
         </Formik>
       </div>
     </div>
