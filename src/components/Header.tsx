@@ -1,14 +1,17 @@
 import { Coffee } from "lucide-react";
 import Image from "next/image";
 import { DropdownMenuCheckboxes } from "./DropdownMenu";
+import Link from "next/link";
 
 export const Header = () => {
   return (
     <div className="flex items-center justify-between p-5 ">
-      <div className="flex gap-3 items-center">
-        <Coffee />
-        <p className="font-bold ">Buy Me Coffee</p>
-      </div>
+      <Link href="/">
+        <div className="flex gap-3 items-center">
+          <Coffee />
+          <p className="font-bold ">Buy Me Coffee</p>
+        </div>
+      </Link>
       <div className="flex gap-5">
         <div className="flex items-center gap-4 ">
           <Image

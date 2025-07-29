@@ -13,7 +13,7 @@ export const RecentSupporters = () => {
         />
         <div>
           <p className="text-sm text-gray-800 font-medium">
-            Guest bought a $1 coffee
+            Guest bought a $5 coffee
           </p>
           <p className="text-sm text-gray-600">Thank you for buying coffee.</p>
         </div>

@@ -39,7 +39,7 @@ export const AboutMe = () => {
           href="https://buymecoffee.com/merkzadok"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-amber-700 hover:underline break-all"
+          className="text-sm text-pink-700 hover:underline break-all"
         >
           https://buymecoffee.com/merkzadok
         </a>
