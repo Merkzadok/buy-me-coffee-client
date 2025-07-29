@@ -2,9 +2,9 @@
 
 import { Formik, Form, FormikHelpers } from "formik";
 import EmailPasswordFields from "./EmailPasswordField";
-import UsernameField from "./UsernameField";
 import { LoginButton } from "../../login/components/LoginButton";
 import { useState } from "react";
+import UsernameField from "./UserNameField";
 
 interface Values {
   firstName: string;
