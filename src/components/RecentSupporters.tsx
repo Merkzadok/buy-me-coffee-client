@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export const RecentSupporters = () => {
   return (
-    <div className=" p-4 space-y-3">
+    <div className=" p-4 space-y-3 rounded-lg  ">
       <div className="flex items-start gap-3">
         <Image
           src="/space.avif"

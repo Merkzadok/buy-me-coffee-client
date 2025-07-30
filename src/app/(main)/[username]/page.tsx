@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { AboutMe } from "./components/AboutMe";
-import { BuyCoffee } from "./components/BuyCoffee";
+import { BuyCoffee } from "@/components/BuyCoffee";
 
 const Page = async ({ params }: { params: Promise<{ username: string }> }) => {
   const { username } = await params;
