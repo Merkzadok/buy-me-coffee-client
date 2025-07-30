@@ -1,26 +1,13 @@
-import { ArrowUp } from "lucide-react";
+"use client";
 
-("use client");
-import * as React from "react";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
+import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import { Header } from "./(main)/(home)/components/Headerr";
-
-import Transaction from "./(main)/(home)/components/Transaction";
-import UserProfile from "./(main)/(home)/components/UserProfile";
-import { Button } from "@/components/ui/button";
 import Toolbar from "./(main)/home/components/Toolbar";
+import UserProfile from "./(main)/home/components/UserProfile";
+import Transaction from "./(main)/home/components/Transaction";
 
-type Checked = DropdownMenuCheckboxItemProps["checked"];
 export default function Home() {
   return (
     <div className="space-y-6">
