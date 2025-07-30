@@ -6,7 +6,7 @@ import Link from "next/link";
 export const Header = () => {
   return (
     <div className="flex items-center justify-between p-5 ">
-      <Link href="/">
+      <Link href="/home">
         <div className="flex gap-3 items-center">
           <Coffee />
           <p className="font-bold ">Buy Me Coffee</p>

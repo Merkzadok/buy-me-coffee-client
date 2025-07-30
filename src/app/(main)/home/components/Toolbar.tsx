@@ -11,7 +11,7 @@ export const Toolbar = () => {
   return (
     <div className="width={251px} height={154px} p-4 border-0  w-[251px] h-[156px] ">
       <div className="flex flex-col hover:bg-grey-100 p-2 space-y-2 ">
-        <Link href="/">
+        <Link href="/home">
           <Button
             variant="ghost"
             className="flex justify-start cursor-pointer  "

@@ -37,7 +37,7 @@ export const UserProfile = () => {
 
         <div>
           {" "}
-          <Button>
+          <Button className="cursor-pointer">
             <Copy />
             Share Page Link
           </Button>
@@ -48,7 +48,9 @@ export const UserProfile = () => {
         <h5 className="font-bold text-xl">Earnings</h5>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="items-center ">Last 30days</Button>
+            <Button variant="outline" className="items-center ">
+              Last 30days
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuCheckboxItem
