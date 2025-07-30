@@ -1,16 +1,28 @@
-import { SquareArrowDownRightIcon } from "lucide-react";
+import {
+  ExternalLink,
+  SquareArrowDownRightIcon,
+  SquareArrowOutUpLeft,
+  SquareArrowOutUpRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Toolbar = () => {
   return (
     <div className="width={251px} height={154px} p-4 border-0  w-[251px] h-[156px] ">
-      <ul className=" hover:bg-grey-100 p-2 space-y-2 ">
-        <li>Home</li>
-        <li>Explore </li>
-        <li className="flex items-center gap-2">
-          View page <SquareArrowDownRightIcon />
-        </li>
-        <li>Account Settings</li>
-      </ul>
+      <div className="flex flex-col hover:bg-grey-100 p-2 space-y-2 ">
+        <Button variant="ghost" className="flex justify-start ">
+          Home
+        </Button>
+        <Button variant="ghost" className="flex justify-start ">
+          Explore
+        </Button>
+        <Button variant="ghost" className="flex justify-start ">
+          View page <ExternalLink/>
+        </Button>
+        <Button variant="ghost" className="flex justify-start ">
+          Account Settings
+        </Button>
+      </div>
     </div>
   );
 };
