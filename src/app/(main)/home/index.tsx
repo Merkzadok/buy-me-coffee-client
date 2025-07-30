@@ -1,4 +1,4 @@
-import { Header } from "./components/Headerr";
+import { Header } from "@/components/Header";
 
 export const Home = () => {
   return <Header />;

@@ -1,13 +1,13 @@
 import { ArrowUp } from "lucide-react";
-import { Header } from "./(main)/home/components/Headerr";
 import Toolbar from "./(main)/home/components/Toolbar";
 import Transaction from "./(main)/home/components/Transaction";
 import UserProfile from "./(main)/home/components/UserProfile";
+import { Header } from "@/components/Header";
 
 export default function Home() {
   return (
     <div className="space-y-6">
-      <Header />{" "}
+      <Header />
       <div className="flex gap-12">
         <Toolbar />
         <div>
