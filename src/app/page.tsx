@@ -1,16 +1,15 @@
 "use client";
 
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
-import { Header } from "./(main)/(home)/components/Headerr";
 import Toolbar from "./(main)/home/components/Toolbar";
 import UserProfile from "./(main)/home/components/UserProfile";
 import Transaction from "./(main)/home/components/Transaction";
+import { Header } from "@/components/Header";
 
 export default function Home() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-[1280px] mx-auto w-full ">
       <Header />
       <div className="flex gap-12">
         <Toolbar />
