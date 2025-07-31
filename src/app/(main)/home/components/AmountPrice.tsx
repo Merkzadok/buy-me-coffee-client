@@ -48,5 +48,4 @@ export const AmountPrice = ({ amount, onAmountChange }: Props) => {
     </DropdownMenu>
   );
 };
-
 export default AmountPrice;
