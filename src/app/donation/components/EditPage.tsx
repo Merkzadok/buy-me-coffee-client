@@ -1,32 +1,36 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export const EditPage = () => {
   return (
-    <div className="my-[91px] w-[510px] h-[631px] m-auto">
-      <div>
-        <div className="flex content-between w-[584px] h-[48px]">
-          <div className="flex mx-auto gap-2 items-center">
-            <Image
-              className="rounded-full"
-              src="/profile.jpeg"
-              width={48}
-              height={48}
-              alt="Picture of the author"
-            />
-            <h1 className="">Jake</h1>
-          </div>
-          <button>Edit page</button>
-        </div>
+    <div className="border border-gray-300 rounded-lg p-4 space-y-3">
+      <div className="flex items-center justify-between">
         <div>
-          <h1>About Jake</h1>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus,
-            maiores.
-          </p>
+          <Image
+            src="/space.avif"
+            width={40}
+            height={40}
+            alt="Picture of the author"
+            className="rounded-full object-cover"
+          />
+          <p className="font-semibold text-lg text-gray-800">Space Ranger</p>
         </div>
+        <Button className="cursor-pointer" variant="outline">
+          Edit page
+        </Button>
       </div>
-      <div></div>
-      <div></div>
+
+      <div>
+        <h2 className="text-sm text-gray-300 font-medium uppercase tracking-wide mb-1">
+          About
+        </h2>
+        <p className="text-sm text-gray-700 leading-relaxed">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae alias
+          voluptates impedit, amet, laboriosam quam officia iure quasi similique
+          dolore ea laudantium quidem quis eius distinctio explicabo quia minus
+          libero.
+        </p>
+      </div>
     </div>
   );
 };
