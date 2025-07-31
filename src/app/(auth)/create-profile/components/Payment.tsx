@@ -1,116 +1,229 @@
 "use client";
 
 import { useState } from "react";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export const Payment = () => {
-  const { register, handleSubmit } = useForm();
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const currentYear = new Date().getFullYear();
+
+const formSchema = z.object({
+  country: z.string().min(1, { message: "Country is required" }),
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
+  cardNumber: z
+    .string()
+    .regex(/^\d{16}$/, { message: "Card number must be 16 digits" }),
+  expMonth: z.string().regex(/^(0[1-9]|1[0-2])$/, {
+    message: "Invalid month",
+  }),
+  expYear: z.string().regex(/^\d{4}$/, { message: "Invalid year" }),
+  cvc: z.string().regex(/^\d{3}$/, { message: "CVC must be 3 digits" }),
+});
+
+export function PaymentForm() {
   const [data, setData] = useState("");
 
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      country: "",
+      firstName: "",
+      lastName: "",
+      cardNumber: "",
+      expMonth: "",
+      expYear: "",
+      cvc: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    setData(JSON.stringify(values));
+  };
+
   return (
-    <form
-      onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}
-      className="max-w-md mx-auto space-y-6 p-6 bg-white rounded-lg shadow"
-    >
-      {/* 1. Select Country */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Country
-        </label>
-        <select
-          {...register("country", { required: true })}
-          className="w-full border border-gray-300 rounded-md p-2 text-sm"
-        >
-          <option value="">Select a country...</option>
-          <option value="USA">USA</option>
-          <option value="UK">United Kingdom</option>
-          <option value="Canada">Canada</option>
-          <option value="Germany">Germany</option>
-          <option value="France">France</option>
-          <option value="Japan">Japan</option>
-          <option value="Australia">Australia</option>
-          <option value="South Korea">South Korea</option>
-          <option value="India">India</option>
-          <option value="Brazil">Brazil</option>
-        </select>
-      </div>
-
-      {/* 2. First Name + Last Name */}
-      <div className="flex gap-4">
-        <input
-          {...register("firstName")}
-          placeholder="First Name"
-          className="w-1/2 border border-gray-300 rounded-md p-2 text-sm"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="max-w-md mx-auto space-y-6 p-6 bg-white rounded-lg shadow"
+      >
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+              <FormControl>
+                <select
+                  {...field}
+                  className="w-full border border-gray-300 rounded-md p-2 text-sm"
+                >
+                  <option value="">Select a country...</option>
+                  {[
+                    "USA",
+                    "UK",
+                    "Canada",
+                    "Germany",
+                    "France",
+                    "Japan",
+                    "Australia",
+                    "South Korea",
+                    "India",
+                    "Brazil",
+                  ].map((country) => (
+                    <option key={country} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <input
-          {...register("lastName")}
-          placeholder="Last Name"
-          className="w-1/2 border border-gray-300 rounded-md p-2 text-sm"
+
+        <div className="flex gap-4">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormControl>
+                  <Input placeholder="First Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormControl>
+                  <Input placeholder="Last Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="cardNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Card Number</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="XXXX XXXX XXXX XXXX"
+                  inputMode="numeric"
+                  maxLength={16}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      {/* 3. Card Number */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Card Number
-        </label>
-        <input
-          {...register("cardNumber")}
-          placeholder="XXXX XXXX XXXX XXXX"
-          className="w-full border border-gray-300 rounded-md p-2 text-sm"
-          type="number"
-        />
-      </div>
+        <div className="flex gap-4">
+          <FormField
+            control={form.control}
+            name="expMonth"
+            render={({ field }) => (
+              <FormItem className="w-1/3">
+                <FormControl>
+                  <select
+                    {...field}
+                    className="w-full border border-gray-300 rounded-md p-2 text-sm"
+                  >
+                    <option value="">Month</option>
+                    {[...Array(12)].map((_, i) => {
+                      const month = `${i + 1}`.padStart(2, "0");
+                      return (
+                        <option key={month} value={month}>
+                          {month}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      {/* 4. Expiry Month + Year + CVC */}
-      <div className="flex gap-4">
-        <select
-          {...register("expMonth")}
-          className="w-1/3 border border-gray-300 rounded-md p-2 text-sm"
-        >
-          <option value="">Month</option>
-          {[...Array(12)].map((_, i) => (
-            <option key={i} value={`${i + 1}`.padStart(2, "0")}>
-              {`${i + 1}`.padStart(2, "0")}
-            </option>
-          ))}
-        </select>
+          <FormField
+            control={form.control}
+            name="expYear"
+            render={({ field }) => (
+              <FormItem className="w-1/3">
+                <FormControl>
+                  <select
+                    {...field}
+                    className="w-full border border-gray-300 rounded-md p-2 text-sm"
+                  >
+                    <option value="">Year</option>
+                    {[...Array(10)].map((_, i) => {
+                      const year = `${currentYear + i}`;
+                      return (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <select
-          {...register("expYear")}
-          className="w-1/3 border border-gray-300 rounded-md p-2 text-sm"
-        >
-          <option value="">Year</option>
-          {[...Array(10)].map((_, i) => {
-            const year = new Date().getFullYear() + i;
-            return (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            );
-          })}
-        </select>
+          <FormField
+            control={form.control}
+            name="cvc"
+            render={({ field }) => (
+              <FormItem className="w-1/3">
+                <FormControl>
+                  <Input
+                    placeholder="CVC"
+                    inputMode="numeric"
+                    maxLength={3}
+                    {...field}
+                    onInput={(e) => {
+                      const input = e.currentTarget;
+                      input.value = input.value
+                        .replace(/[^0-9]/g, "")
+                        .slice(0, 3);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <input
-          {...register("cvc")}
-          placeholder="CVC"
-          className="w-1/3 border border-gray-300 rounded-md p-2 text-sm"
-          type="number"
-        />
-      </div>
-
-      {/* 5. Submit Button */}
-      <div>
-        <button
-          type="submit"
-          className="w-full bg-gray-800 text-white rounded-md py-2 text-sm hover:bg-gray-700 transition-colors"
-        >
+        <Button type="submit" className="w-full">
           Continue
-        </button>
-      </div>
+        </Button>
 
-      {/* Debug Data */}
-      <p className="text-xs text-gray-500 break-words">{data}</p>
-    </form>
+        <p className="text-xs text-gray-500 break-words">{data}</p>
+      </form>
+    </Form>
   );
-};
+}
