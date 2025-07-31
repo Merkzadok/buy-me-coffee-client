@@ -58,20 +58,14 @@ export const Container = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <div
+                    <Input
+                      placeholder="add image"
+                      type="file"
                       className="outline-dashed  flex justify-center items-center w-[160px] h-[160px] rounded-full"
                       {...field}
-                    >
-                      <Image
-                        className="pl-[75px] pt-[75px]"
-                        src="/profile.png"
-                        width={160}
-                        height={160}
-                        alt="profile"
-                      />
-                      <FormMessage />
-                    </div>
+                    />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
