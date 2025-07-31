@@ -1,13 +1,14 @@
-import { Container } from "./components/Container";
 import { Header } from "./components/Header";
+import { LoadingProfile } from "./components/LoadingProfile";
 import { PaymentForm } from "./components/Payment";
 
 const Page = () => {
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       {/* <Container /> */}
-      <PaymentForm />
+      {/* <PaymentForm /> */}
+      <LoadingProfile />
     </div>
   );
 };
