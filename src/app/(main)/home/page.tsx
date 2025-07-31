@@ -7,7 +7,7 @@ import { Header } from "@/components/Header";
 import Toolbar from "./components/Toolbar";
 import UserProfile from "./components/UserProfile";
 import Transaction from "./components/Transaction";
-
+import { AmountPrice } from "./components/AmountPrice";
 export default function Home() {
   return (
     <div className="space-y-6 max-w-[1280px] mx-auto w-full ">
@@ -19,9 +19,7 @@ export default function Home() {
           <UserProfile />
           <div className="flex justify-between items-center p-4">
             <p>Recent Transactions</p>
-            <Button variant="outline">
-              <ArrowDown /> Amount
-            </Button>
+            <AmountPrice />
           </div>
           <div className="border border-gray-200 rounded-lg w-[955px] h-[960px]p-4">
             <div className=" flex   flex-col ">
