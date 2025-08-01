@@ -15,12 +15,30 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  useState,
+  useRef,
+  ComponentProps,
+} from "react";
+
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 const formSchema = z.object({
-  image: z.string().min(2, {
-    message: "please enter image",
-  }),
-  name: z.string().min(2, {
+  image: z
+    .instanceof(File) // 👈 Ensure the value is a File object
+    .refine((file) => file.size >= 50000, `Max image size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    ),
+  Name: z.string().min(2, {
     message: "name must be at least 4 characters.",
   }),
   about: z.string().min(5, {
@@ -31,48 +49,86 @@ const formSchema = z.object({
   }),
 });
 
-export const Container = () => {
-  const form = useForm({
+type createProfileType = {
+  handleNext: () => void;
+};
+
+export const Container = ({ handleNext }: createProfileType) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       image: "",
-      name: "",
+      Name: "",
       about: "",
       social: "https://",
     },
   });
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    if (form.formState.errors) handleNext();
+  };
+
+  const onChange = (event: ChangeEvent<HTMLInputElement>, field: any) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const objectUrl = URL.createObjectURL(file);
+      field.onChange(file);
+      setImage(objectUrl);
+    }
+  };
+
+  const openFile = () => {
+    if (!inputRef.current) return;
+    inputRef.current.click();
+  };
 
   return (
     <div className="my-[91px] w-[510px] h-[631px] m-auto">
       <h1 className="text-2xl font-bold">Complete your profile page</h1>
       <div className="w-[510px] h-[301px] mt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormLabel>add photo</FormLabel>
 
             <FormField
               control={form.control}
               name="image"
-              render={({ field }) => (
+              render={({ field: { value, ...field } }) => (
                 <FormItem>
                   <FormControl>
                     <Input
+                      className="hidden"
                       placeholder="add image"
                       type="file"
-                      className="outline-dashed  flex justify-center items-center w-[160px] h-[160px] rounded-full"
+                      accept="image/*"
                       {...field}
+                      ref={inputRef}
+                      onChange={(event) => onChange(event, field)}
                     />
                   </FormControl>
+
+                  <div
+                    className="outline-dashed  flex justify-center items-center w-[160px] h-[160px] rounded-full overflow-hidden"
+                    onClick={openFile}
+                  >
+                    {image ? (
+                      <img src={image} className="object-fit" />
+                    ) : (
+                      "Select image"
+                    )}
+                  </div>
+
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormLabel>Name</FormLabel>
             <FormField
               control={form.control}
-              name="name"
+              name="Name"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

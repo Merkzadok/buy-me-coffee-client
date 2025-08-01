@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,7 +32,10 @@ const formSchema = z.object({
   cvc: z.string().regex(/^\d{3}$/, { message: "CVC must be 3 digits" }),
 });
 
-export function PaymentForm() {
+type UsernameFieldProps = {
+  setStep: Dispatch<SetStateAction<number>>;
+};
+export function PaymentForm({ setStep }: UsernameFieldProps) {
   const [data, setData] = useState("");
 
   const form = useForm({
@@ -58,6 +61,7 @@ export function PaymentForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="max-w-md mx-auto space-y-6 p-6 bg-white rounded-lg shadow"
       >
+        {}
         <FormField
           control={form.control}
           name="country"

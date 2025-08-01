@@ -1,11 +1,12 @@
-import { Container } from "./components/Container";
+"use client";
 import { Header } from "./components/Header";
+import { ContainerPayment } from "./components/ContainerPayment";
 
 const Page = () => {
   return (
     <div>
       <Header />
-      <Container />
+      <ContainerPayment />
     </div>
   );
 };
