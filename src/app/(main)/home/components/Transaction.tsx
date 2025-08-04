@@ -1,7 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Image from "next/image";
+import { ReceivedDonation } from "@/interface/user.interface";
+import React from "react";
+import { formatDistanceToNow } from "date-fns";
+type Props = {
+  transaction: ReceivedDonation;
+};
 
-export const Transaction = () => {
+export const Transaction = ({ transaction }: Props) => {
   return (
     <div className="w-[955px]rounded-lg p-4 ">
       <div className=" pb-4 flex items-center gap-4">
@@ -12,18 +17,19 @@ export const Transaction = () => {
           </Avatar>
         </div>
         <div className="flex flex-col gap-1 ">
-          <h2 className="font-bold">Guest</h2>
-          <p>instagram.com/welesley</p>
-          <div className="flex flex-col items-end justify-end">
-            <p>+$1</p>
-            <p className="text-gray-400">10hours ago</p>
+          <h2 className="font-bold">{transaction.donor.username || "Guest"}</h2>
+          <p>{transaction.socialURLOrBuyMeACoffee}</p>
+          <div className="flex flex-col justify-between">
+            <p>+${transaction.amount}</p>
+            <p className="text-gray-400">
+              {" "}
+              {formatDistanceToNow(new Date(transaction.createdAt), {
+                addSuffix: true,
+              })}
+            </p>
           </div>
-        
-        <p>
-          Thank you for being so awesome everyday! You always manage to brighten
-          up my day when I am feeling down.Although $1 isn't that much
-          money.It's all I can do contribute at the moment.{" "}
-        </p>
+
+          <p>{transaction.specialMessage}</p>
         </div>
       </div>
     </div>

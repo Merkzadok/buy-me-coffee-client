@@ -1,46 +1,52 @@
 "use client";
 import * as React from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowDown } from "lucide-react";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+type Props = {
+  amount: string;
+  onAmountChange: (value: string) => void;
+};
 
-export const AmountPrice = () => {
+export const AmountPrice = ({ amount, onAmountChange }: Props) => {
+  const [selectedAmount, setSelectedAmount] = React.useState(amount);
+
+  const handleChange = (value: string) => {
+    setSelectedAmount(value);
+    onAmountChange(value);
+  };
+
+  const amountOptions = ["1", "2", "5", "10"];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {" "}
-          <ArrowDown />
+          <ArrowDown className="mr-2" />
           Amount
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-       <div></div>
-          <div className="flex  items-center space-x-2">
-            <Checkbox id="terms" />
-            <Label htmlFor="terms">+$1</Label>
-
-            <Checkbox id="terms" />
-            <Label htmlFor="terms">+$2</Label>
-
-            <Checkbox id="terms" />
-            <Label htmlFor="terms">+$5</Label>
-
-            <Checkbox id="terms" />
-            <Label htmlFor="terms">+$10</Label>
-          </div>
-      
+      <DropdownMenuContent className="w-40">
+        <DropdownMenuRadioGroup
+          value={selectedAmount}
+          onValueChange={handleChange}
+        >
+          {amountOptions.map((amt) => (
+            <DropdownMenuRadioItem key={amt} value={amt}>
+              +${amt}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
+
 export default AmountPrice;

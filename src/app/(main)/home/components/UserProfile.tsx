@@ -62,7 +62,7 @@ export const UserProfile = () => {
             <DropdownMenuCheckboxItem
               checked={showActivityBar}
               onCheckedChange={setShowActivityBar}
-              disabled
+             
             >
               Last 90days
             </DropdownMenuCheckboxItem>
