@@ -23,21 +23,17 @@ import {
   ComponentProps,
 } from "react";
 
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
+// const ACCEPTED_IMAGE_TYPES = [
+//   "image/jpeg",
+//   "image/jpg",
+//   "image/png",
+//   "image/webp",
+// ];
 
 const formSchema = z.object({
-  image: z
-    .instanceof(File) // 👈 Ensure the value is a File object
-    .refine((file) => file.size >= 50000, `Max image size is 5MB.`)
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
-    ),
+  image: z.string().min(1, {
+    message: "please upload image!",
+  }),
   Name: z.string().min(2, {
     message: "name must be at least 4 characters.",
   }),
@@ -55,7 +51,8 @@ type createProfileType = {
 
 export const Container = ({ handleNext }: createProfileType) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string>("");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -66,16 +63,36 @@ export const Container = ({ handleNext }: createProfileType) => {
     },
   });
 
-  const onSubmit = () => {
+  const onSubmit = async (values) => {
+    console.log(values);
     if (form.formState.errors) handleNext();
   };
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>, field: any) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      const objectUrl = URL.createObjectURL(file);
-      field.onChange(file);
-      setImage(objectUrl);
+  const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "profileImage");
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/daywx3gsj/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        // setFieldValue("profileImage", data.secure_url);
+        form.setValue("image", data.secure_url);
+        setImage(data.url);
+      }
+      console.log("dataa image: ", data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -83,6 +100,8 @@ export const Container = ({ handleNext }: createProfileType) => {
     if (!inputRef.current) return;
     inputRef.current.click();
   };
+
+  console.log(image);
 
   return (
     <div className="my-[91px] w-[510px] h-[631px] m-auto">
@@ -105,7 +124,7 @@ export const Container = ({ handleNext }: createProfileType) => {
                       accept="image/*"
                       {...field}
                       ref={inputRef}
-                      onChange={(event) => onChange(event, field)}
+                      onChange={onChange}
                     />
                   </FormControl>
 
