@@ -6,18 +6,21 @@ import { LoginButton } from "../../login/components/LoginButton";
 import { useState } from "react";
 import UsernameField from "./UserNameField";
 
-interface Values {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
 export const SignUpCreateAccount = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState<number>(0);
+
+  const [data, setData] = useState<string>();
+
   const StepComponent = [
-    <UsernameField setStep={setStep} />,
-    <EmailPasswordFields setStep={setStep} />,
+    <UsernameField
+      setStep={setStep}
+      step={step}
+      data={data}
+      setData={setData}
+    />,
+    <EmailPasswordFields setStep={setStep} data={data} setData={setData} />,
   ];
+
   return (
     <div className="flex flex-col items-center justify-center w-1/2 bg-gray-100 px-4 relative">
       <div className="absolute top-10 right-10 ">
@@ -33,7 +36,7 @@ export const SignUpCreateAccount = () => {
           Choose a username for your page
         </p>
 
-        <Formik
+        {/* <Formik
           initialValues={{
             firstName: "",
             lastName: "",
@@ -48,8 +51,9 @@ export const SignUpCreateAccount = () => {
             }, 500);
           }}
         >
-          <Form className="flex flex-col gap-4">{StepComponent[step]}</Form>
-        </Formik>
+          <Form className="flex flex-col gap-4">{</Form>
+        </Formik> */}
+        {StepComponent[step]}
       </div>
     </div>
   );

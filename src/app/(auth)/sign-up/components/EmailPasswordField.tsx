@@ -1,44 +1,96 @@
 "use client";
-import { Field } from "formik";
+
+import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { useFormik } from "formik";
 import { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
 
 type EmailPasswordFieldsProps = {
   setStep: Dispatch<SetStateAction<number>>;
+  data: any;
+  setData: Dispatch<SetStateAction<any>>;
 };
-const EmailPasswordFields = ({ setStep }: EmailPasswordFieldsProps) => {
+
+interface Values {
+  email: string;
+  password: string;
+}
+
+const EmailPasswordFields = ({
+  setStep,
+  data,
+  setData,
+}: EmailPasswordFieldsProps) => {
+  const router = useRouter();
+
+  const handleSubmit = async (values: Values) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth`,
+        {
+          username: values.email,
+          password: values.password,
+        }
+      );
+
+      if (response.status === 200) {
+        setData({ email: values.email, password: values.password });
+
+        router.push("/login");
+      } else if (response.status === 500) {
+        console.log("username already taken");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: handleSubmit,
+  });
+
   return (
-    <>
-      <div className="flex flex-col">
-        <label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+      <div>
+        <label htmlFor="email" className="text-sm font-medium text-gray-700">
           Email
         </label>
-        <Field
-          id="lastName"
-          name="lastName"
-          placeholder="Enter email here"
+        <Input
+          id="email"
+          name="email"
           type="email"
-          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter email here"
+          value={formik.values.email}
+          onChange={formik.handleChange}
         />
       </div>
 
-      <div className="flex flex-col">
-        <label htmlFor="email" className="text-sm font-medium text-gray-700">
+      <div>
+        <label htmlFor="password" className="text-sm font-medium text-gray-700">
           Password
         </label>
-        <Field
-          id="email"
-          name="email"
+        <Input
+          id="password"
+          name="password"
+          type="password"
           placeholder="Enter password here"
-          className="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={formik.values.password}
+          onChange={formik.handleChange}
         />
       </div>
+
       <button
-        className="mt-4 bg-black hover:bg-sky-100 text-white hover:text-black font-semibold py-2 px-4 rounded-md transition-colors cursor-pointer duration-200"
-        onClick={() => setStep(1)}
+        type="submit"
+        className="mt-4 bg-black hover:bg-sky-100 text-white hover:text-black font-semibold py-2 px-4 rounded-md transition-colors duration-200"
       >
         Continue
       </button>
-    </>
+    </form>
   );
 };
 
