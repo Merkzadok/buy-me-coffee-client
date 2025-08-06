@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ArrowDown } from "lucide-react";
-
 import { Header } from "@/components/Header";
 import Toolbar from "./components/Toolbar";
 import UserProfile from "./components/UserProfile";
@@ -24,7 +21,7 @@ export default function Home() {
     const fetchCurrentUser = async () => {
       try {
         const res = await fetch(
-          "http://localhost:4200/profile/current-user?id=16"
+          `http://localhost:4200/profile/${userData?.user.id || 1}` 
         );
         const data = await res.json();
         setUserData(data);
@@ -40,7 +37,7 @@ export default function Home() {
     const fetchRecentTransactions = async () => {
       try {
         const res = await fetch(
-          `http://localhost:4200/donation/recieved/16?time=${time}&amount=${amount}`
+          `http://localhost:4200/donation/recieved/userId?time=${time}&amount=${amount}`
         );
         const data = await res.json();
         setDonation(data);
@@ -60,7 +57,7 @@ export default function Home() {
           <div className="flex justify-between items-center p-4">
             <p>Recent Transactions</p>
             <AmountPrice
-              amount={amount} 
+              amount={amount}
               onAmountChange={(value) => {
                 setAmount(value);
               }}
