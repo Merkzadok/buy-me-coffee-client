@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ReceivedDonation } from "@/interface/user.interface";
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
+
 type Props = {
   transaction: ReceivedDonation;
 };

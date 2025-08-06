@@ -12,7 +12,7 @@ import {
 } from "@/interface/user.interface";
 export default function Home() {
   const [amount, setAmount] = useState<string>("");
-  const [time, setTime] = useState<string>("30");
+  const [time, setTime] = useState<0 | 30 | 90>(30);
 
   const [userData, setUserData] = useState<CurrentUserResponse>();
   const [donation, setDonation] = useState<ReceivedDonation[]>([]);
@@ -21,9 +21,11 @@ export default function Home() {
     const fetchCurrentUser = async () => {
       try {
         const res = await fetch(
-          `http://localhost:4200/profile/${userData?.user.id || 1}` 
+          `http://localhost:4200/profile/${userData?.user.id || 2}`
         );
         const data = await res.json();
+
+        console.log(data);
         setUserData(data);
       } catch (err) {
         console.error("Fetch error:", err);
@@ -34,17 +36,19 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const fetchRecentTransactions = async () => {
+    const getDonations = async () => {
       try {
         const res = await fetch(
-          `http://localhost:4200/donation/recieved/userId?time=${time}&amount=${amount}`
+          `http://localhost:4200/donation/received/2?time=all&amount=${amount}`
         );
         const data = await res.json();
         setDonation(data);
-      } catch (err) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
-    fetchRecentTransactions();
-  }, [amount, time]);
+    getDonations();
+  }, []);
 
   return (
     <div className="space-y-6 max-w-[1280px] mx-auto w-full ">
@@ -63,7 +67,7 @@ export default function Home() {
               }}
             />
           </div>
-          <div className="border border-gray-200 rounded-lg w-[955px] h-[960px]p-4">
+          <div className="border border-gray-200 rounded-lg w-[955px] p-4">
             <div className=" flex   flex-col ">
               {donation.length > 0 ? (
                 donation.map((transaction, i) => (
