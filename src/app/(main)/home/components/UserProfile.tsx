@@ -80,7 +80,7 @@ export const UserProfile = () => {
         </DropdownMenu>
       </div>
       <div>
-        <h6 className="text-5xl font-bold p-4 ">{earnings.[SelectedRange]}</h6>
+        <h6 className="text-5xl font-bold p-4 ">$450</h6>
       </div>
     </div>
   );
