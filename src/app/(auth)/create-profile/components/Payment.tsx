@@ -4,7 +4,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,6 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const currentYear = new Date().getFullYear();
 
@@ -34,9 +35,13 @@ const formSchema = z.object({
 
 type UsernameFieldProps = {
   setStep: Dispatch<SetStateAction<number>>;
+  userId: string; // 👈 ADD THIS TO PASS IN USER ID
 };
-export function PaymentForm({ setStep }: UsernameFieldProps) {
-  const [data, setData] = useState("");
+
+export function PaymentForm({ setStep, userId }: UsernameFieldProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -51,8 +56,30 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    setData(JSON.stringify(values));
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/bank-card/${userId}`,
+        values
+      );
+
+      if (response.status === 200) {
+        // Success – advance step or redirect
+        setStep((prev) => prev + 1); // or router.push("/success") or similar
+      } else {
+        setError("Something went wrong. Try again.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(
+        err?.response?.data?.message || "Failed to save card. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -61,7 +88,6 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="max-w-md mx-auto space-y-6 p-6 bg-white rounded-lg shadow"
       >
-        {}
         <FormField
           control={form.control}
           name="country"
@@ -72,6 +98,7 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
                 <select
                   {...field}
                   className="w-full border border-gray-300 rounded-md p-2 text-sm"
+                  disabled={loading}
                 >
                   <option value="">Select a country...</option>
                   {[
@@ -104,7 +131,11 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
             render={({ field }) => (
               <FormItem className="w-1/2">
                 <FormControl>
-                  <Input placeholder="First Name" {...field} />
+                  <Input
+                    placeholder="First Name"
+                    {...field}
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -117,7 +148,11 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
             render={({ field }) => (
               <FormItem className="w-1/2">
                 <FormControl>
-                  <Input placeholder="Last Name" {...field} />
+                  <Input
+                    placeholder="Last Name"
+                    {...field}
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -137,6 +172,7 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
                   inputMode="numeric"
                   maxLength={16}
                   {...field}
+                  disabled={loading}
                 />
               </FormControl>
               <FormMessage />
@@ -154,6 +190,7 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
                   <select
                     {...field}
                     className="w-full border border-gray-300 rounded-md p-2 text-sm"
+                    disabled={loading}
                   >
                     <option value="">Month</option>
                     {[...Array(12)].map((_, i) => {
@@ -180,6 +217,7 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
                   <select
                     {...field}
                     className="w-full border border-gray-300 rounded-md p-2 text-sm"
+                    disabled={loading}
                   >
                     <option value="">Year</option>
                     {[...Array(10)].map((_, i) => {
@@ -208,6 +246,7 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
                     inputMode="numeric"
                     maxLength={3}
                     {...field}
+                    disabled={loading}
                     onInput={(e) => {
                       const input = e.currentTarget;
                       input.value = input.value
@@ -222,11 +261,15 @@ export function PaymentForm({ setStep }: UsernameFieldProps) {
           />
         </div>
 
-        <Button type="submit" className="w-full">
-          Continue
-        </Button>
+        {error && (
+          <p className="text-sm text-red-500 font-medium text-center">
+            {error}
+          </p>
+        )}
 
-        <p className="text-xs text-gray-500 break-words">{data}</p>
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Processing..." : "Continue"}
+        </Button>
       </form>
     </Form>
   );
