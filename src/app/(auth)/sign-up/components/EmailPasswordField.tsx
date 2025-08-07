@@ -29,8 +29,9 @@ const EmailPasswordFields = ({
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth`,
         {
-          username: values.email,
+          email: values.email,
           password: values.password,
+          username: data,
         }
       );
 
