@@ -17,23 +17,21 @@ export default function Home() {
   const [userData, setUserData] = useState<CurrentUserResponse>();
   const [donation, setDonation] = useState<ReceivedDonation[]>([]);
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:4200/profile/${userData?.user.id || 2}`
-        );
-        const data = await res.json();
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const res = await fetch(`http://localhost:4200/profile/2}`);
+  //       const data = await res.json();
 
-        console.log(data);
-        setUserData(data);
-      } catch (err) {
-        console.error("Fetch error:", err);
-      }
-    };
+  //       console.log(data);
+  //       setUserData(data);
+  //     } catch (err) {
+  //       console.error("Fetch error:", err);
+  //     }
+  //   };
 
-    fetchCurrentUser();
-  }, []);
+  //   getUserData();
+  // }, []);
 
   useEffect(() => {
     const getDonations = async () => {
