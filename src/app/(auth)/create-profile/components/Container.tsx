@@ -1,9 +1,8 @@
 "use client";
-import { Camera } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,26 +14,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  useState,
-  useRef,
-  ComponentProps,
-} from "react";
-
-// const ACCEPTED_IMAGE_TYPES = [
-//   "image/jpeg",
-//   "image/jpg",
-//   "image/png",
-//   "image/webp",
-// ];
+import { ChangeEvent, useState, useEffect, useRef } from "react";
+import { useUser } from "@/app/provider/currentUserProvider";
 
 const formSchema = z.object({
   image: z.string().min(1, {
     message: "please upload image!",
   }),
-  Name: z.string().min(2, {
+  name: z.string().min(2, {
     message: "name must be at least 4 characters.",
   }),
   about: z.string().min(5, {
@@ -50,6 +37,7 @@ type createProfileType = {
 };
 
 export const Container = ({ handleNext }: createProfileType) => {
+  const { userProvider } = useUser();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<string>("");
 
@@ -57,15 +45,26 @@ export const Container = ({ handleNext }: createProfileType) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       image: "",
-      Name: "",
+      name: "",
       about: "",
       social: "https://",
     },
   });
 
-  const onSubmit = async (values) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (form.formState.errors) handleNext();
+
+    try {
+      await axios.post(`http://localhost:4200/profile/${userProvider.id}`, {
+        avatarImage: values.image,
+        about: values.about,
+        name: values.name,
+        socialMediaURL: values.social,
+        image: values.image,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +85,6 @@ export const Container = ({ handleNext }: createProfileType) => {
 
       const data = await response.json();
       if (data.secure_url) {
-        // setFieldValue("profileImage", data.secure_url);
         form.setValue("image", data.secure_url);
         setImage(data.url);
       }
@@ -100,8 +98,6 @@ export const Container = ({ handleNext }: createProfileType) => {
     if (!inputRef.current) return;
     inputRef.current.click();
   };
-
-  console.log(image);
 
   return (
     <div className="my-[91px] w-[510px] h-[631px] m-auto">
@@ -147,7 +143,7 @@ export const Container = ({ handleNext }: createProfileType) => {
             <FormLabel>Name</FormLabel>
             <FormField
               control={form.control}
-              name="Name"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
