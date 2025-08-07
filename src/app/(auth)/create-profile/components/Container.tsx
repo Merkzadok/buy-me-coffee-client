@@ -15,12 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { ChangeEvent, useState, useEffect, useRef } from "react";
+import { useUser } from "@/app/provider/currentUserProvider";
 
 const formSchema = z.object({
   image: z.string().min(1, {
     message: "please upload image!",
   }),
-  Name: z.string().min(2, {
+  name: z.string().min(2, {
     message: "name must be at least 4 characters.",
   }),
   about: z.string().min(5, {
@@ -36,6 +37,7 @@ type createProfileType = {
 };
 
 export const Container = ({ handleNext }: createProfileType) => {
+  const { userProvider } = useUser();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<string>("");
 
@@ -43,21 +45,21 @@ export const Container = ({ handleNext }: createProfileType) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       image: "",
-      Name: "",
+      name: "",
       about: "",
       social: "https://",
     },
   });
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (form.formState.errors) handleNext();
 
     try {
       await axios.post(`http://localhost:4200/profile/${userProvider.id}`, {
-        avatarImage: values.profileImage,
+        avatarImage: values.image,
         about: values.about,
         name: values.name,
-        socialMediaURL: values.socialURL,
+        socialMediaURL: values.social,
         image: values.image,
       });
     } catch (error) {
@@ -141,7 +143,7 @@ export const Container = ({ handleNext }: createProfileType) => {
             <FormLabel>Name</FormLabel>
             <FormField
               control={form.control}
-              name="Name"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

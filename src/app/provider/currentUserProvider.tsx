@@ -2,7 +2,7 @@
 
 import { UserType } from "@/lib/types";
 import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 type userContextType = {
   userProvider: UserType;
@@ -19,6 +19,8 @@ export default function UserContextProvider({
 
   const getCurrentUserByAccessToken = async () => {
     const token = localStorage.getItem("token") as string;
+
+    if (!token) return;
     try {
       const response = await axios.get(
         "http://localhost:4200/profile/current-user",
@@ -45,3 +47,5 @@ export default function UserContextProvider({
     </UserContext.Provider>
   );
 }
+
+export const useUser = () => useContext(UserContext);
