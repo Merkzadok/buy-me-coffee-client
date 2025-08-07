@@ -1,9 +1,8 @@
 "use client";
-import { Camera } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,20 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  useState,
-  useRef,
-  ComponentProps,
-} from "react";
-
-// const ACCEPTED_IMAGE_TYPES = [
-//   "image/jpeg",
-//   "image/jpg",
-//   "image/png",
-//   "image/webp",
-// ];
+import { ChangeEvent, useState, useEffect, useRef } from "react";
 
 const formSchema = z.object({
   image: z.string().min(1, {
@@ -64,8 +50,19 @@ export const Container = ({ handleNext }: createProfileType) => {
   });
 
   const onSubmit = async (values) => {
-    console.log(values);
     if (form.formState.errors) handleNext();
+
+    try {
+      await axios.post(`http://localhost:4200/profile/${userProvider.id}`, {
+        avatarImage: values.profileImage,
+        about: values.about,
+        name: values.name,
+        socialMediaURL: values.socialURL,
+        image: values.image,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +83,6 @@ export const Container = ({ handleNext }: createProfileType) => {
 
       const data = await response.json();
       if (data.secure_url) {
-        // setFieldValue("profileImage", data.secure_url);
         form.setValue("image", data.secure_url);
         setImage(data.url);
       }
@@ -100,8 +96,6 @@ export const Container = ({ handleNext }: createProfileType) => {
     if (!inputRef.current) return;
     inputRef.current.click();
   };
-
-  console.log(image);
 
   return (
     <div className="my-[91px] w-[510px] h-[631px] m-auto">
