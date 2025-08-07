@@ -1,6 +1,5 @@
 "use client";
 
-import { Formik, Form, FormikHelpers } from "formik";
 import EmailPasswordFields from "./EmailPasswordField";
 import { LoginButton } from "../../login/components/LoginButton";
 import { useState } from "react";
