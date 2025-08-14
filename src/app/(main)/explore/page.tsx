@@ -1,6 +1,8 @@
+"use client";
+
 import { Header } from "@/components/Header";
-import { ExploreCard } from "./components/ExploreCard";
 import Toolbar from "../home/components/Toolbar";
+import { ExploreCard } from "./components/ExploreCard";
 
 export default function Explore() {
   return (
@@ -9,7 +11,7 @@ export default function Explore() {
       <div className="max-w-[1280px] mx-auto w-full flex gap-20 ">
         <Toolbar />
         <div className="flex items-center h-screen w-screen mx-auto flex-col  ">
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 10 }).map((_, i) => (
             <ExploreCard key={i} />
           ))}
         </div>
