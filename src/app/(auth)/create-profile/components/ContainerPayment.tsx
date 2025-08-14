@@ -11,7 +11,7 @@ export const ContainerPayment = () => {
 
   const stepComponents = [
     <Container key={0} handleNext={handleNext} />,
-    <PaymentForm key={1} setStep={setStep} />,
+    <PaymentForm key={1} setStep={setStep} userId={""} />,
   ];
 
   return stepComponents[step];
