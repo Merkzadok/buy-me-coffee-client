@@ -12,6 +12,7 @@ export type UsernameFieldProps = {
   setData: Dispatch<SetStateAction<any>>;
   data: any;
 };
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4200";
 
 interface Values {
   username: string;
@@ -28,7 +29,6 @@ const UsernameField = ({
   const handleSubmit = async (values: Values) => {
     setErrorMsg(""); // clear old error
 
-    // ✅ FRONTEND VALIDATION
     if (!values.username.trim()) {
       const message = "Username cannot be empty";
       toast.error(message);
@@ -43,10 +43,10 @@ const UsernameField = ({
     }
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-username`,
-        { username: values.username }
-      );
+      const response = await axios.post(`${API_URL}/users/check-username`, {
+        username: values.username.trim(),
+      });
+      console.log(process.env.NEXT_PUBLIC_API_URL);
 
       if (response.status === 200) {
         setData(values.username);

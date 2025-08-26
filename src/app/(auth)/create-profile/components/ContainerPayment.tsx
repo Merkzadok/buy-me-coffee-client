@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Container } from "./Container";
 import { PaymentForm } from "./Payment";
 

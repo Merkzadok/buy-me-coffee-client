@@ -35,14 +35,11 @@ export default function UserContextProvider({
       setLoading(true);
       setError(null);
 
-      const response = await axios.get(
-        "http://localhost:4200/profile/current-user",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get("http://localhost:4200/profile/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setUserProvider(response?.data?.user);
     } catch (error: any) {
