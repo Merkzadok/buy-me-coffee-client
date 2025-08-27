@@ -1,3 +1,4 @@
+"use client";
 import { Coffee, User } from "lucide-react";
 import Image from "next/image";
 import { DropdownMenuCheckboxes } from "./DropdownMenu";

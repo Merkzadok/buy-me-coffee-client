@@ -66,4 +66,5 @@ export type UserType = {
   createdAt: string;
   updatedAt: string;
   profilePicture?: string;
+  profile?: ProfileType;
 };

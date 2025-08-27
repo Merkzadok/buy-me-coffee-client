@@ -35,7 +35,8 @@ export const LoginAccount = () => {
       );
 
       localStorage.setItem("token", response.data.accesstoken);
-      router.push("/home");
+
+      router.push("/create-profile");
     } catch (error: any) {
       const status = error.response?.status;
       const message = error.response?.data?.message || "";

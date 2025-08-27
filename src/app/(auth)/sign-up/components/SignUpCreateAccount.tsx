@@ -7,8 +7,7 @@ import UsernameField from "./UserNameField";
 
 export const SignUpCreateAccount = () => {
   const [step, setStep] = useState<number>(0);
-
-  const [data, setData] = useState<string>();
+  const [data, setData] = useState<string>("");
 
   const StepComponent = [
     <UsernameField
@@ -35,23 +34,6 @@ export const SignUpCreateAccount = () => {
           Choose a username for your page
         </p>
 
-        {/* <Formik
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-          }}
-          onSubmit={(
-            values: Values,
-            { setSubmitting }: FormikHelpers<Values>
-          ) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-            }, 500);
-          }}
-        >
-          <Form className="flex flex-col gap-4">{</Form>
-        </Formik> */}
         {StepComponent[step]}
       </div>
     </div>

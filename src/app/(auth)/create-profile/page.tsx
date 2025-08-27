@@ -1,13 +1,15 @@
 "use client";
-import { Header } from "@/components/Header";
-import { ContainerPayment } from "./components/ContainerPayment";
 
-const Page = () => {
+import { Header } from "@/components/Header";
+import { CompleteProfile } from "./components/CompleteProfile";
+
+const CreateProfilePage = () => {
   return (
     <div>
       <Header />
-      <ContainerPayment />
+      <CompleteProfile />
     </div>
   );
 };
-export default Page;
+
+export default CreateProfilePage;
