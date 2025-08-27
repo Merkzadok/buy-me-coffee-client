@@ -26,13 +26,12 @@ const formSchema = z.object({
 });
 
 export const CompleteProfile = () => {
-  const { userProvider, loading, refreshUser } = useUser();
+  const { user, loading, refreshUser } = useUser();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Initialize the form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,38 +42,18 @@ export const CompleteProfile = () => {
     },
   });
 
-  // Debug: Log user data when it changes
+  // Populate form when user data is ready
   useEffect(() => {
-    console.log("🔍 Debug - User Provider Data:", {
-      userProvider,
-      loading,
-      hasId: !!userProvider?.id,
-      hasProfile: !!userProvider?.profile,
-    });
-
-    if (!loading && userProvider?.id) {
-      const profileData = {
-        image: userProvider.profile?.avatarImage || "",
-        name: userProvider.profile?.name || "",
-        about: userProvider.profile?.about || "",
-        social: userProvider.profile?.socialMediaURL || "https://",
-      };
-
-      console.log("🔍 Debug - Setting form data:", profileData);
-      form.reset(profileData);
-      setImagePreview(userProvider.profile?.avatarImage || "");
+    if (!loading && user?.id) {
+      form.reset({
+        image: user.profile?.avatarImage || "",
+        name: user.profile?.name || "",
+        about: user.profile?.about || "",
+        social: user.profile?.socialMediaURL || "https://",
+      });
+      setImagePreview(user.profile?.avatarImage || "");
     }
-  }, [loading, userProvider, form]);
-
-  // Debug: Check token
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("🔍 Debug - Token exists:", !!token);
-    console.log(
-      "🔍 Debug - Token preview:",
-      token ? token.substring(0, 20) + "..." : "No token"
-    );
-  }, []);
+  }, [loading, user, form]);
 
   const openFile = () => inputRef.current?.click();
 
@@ -82,159 +61,58 @@ export const CompleteProfile = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log("🔍 Debug - Uploading image:", file.name);
-
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "profileImage");
 
-    try {
-      const response = await fetch(
-        "https://api.cloudinary.com/v1_1/daywx3gsj/image/upload",
-        { method: "POST", body: formData }
-      );
-      const data = await response.json();
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/daywx3gsj/image/upload",
+      { method: "POST", body: formData }
+    );
+    const data = await response.json();
 
-      console.log("🔍 Debug - Cloudinary response:", data);
-
-      if (data.secure_url) {
-        form.setValue("image", data.secure_url);
-        setImagePreview(data.secure_url);
-        console.log("✅ Image uploaded successfully");
-      }
-    } catch (error) {
-      console.error("❌ Image upload error:", error);
+    if (data.secure_url) {
+      form.setValue("image", data.secure_url);
+      setImagePreview(data.secure_url);
     }
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
-
     try {
       const token = localStorage.getItem("token");
-
-      console.log("🔍 Debug - Submitting profile:", {
-        values,
-        hasToken: !!token,
-        tokenPreview: token ? token.substring(0, 20) + "..." : "No token",
-      });
-
       if (!token) {
-        alert("No access token found. Please login again.");
-        return;
-      }
-
-      // Test token validity first
-      console.log("🔍 Debug - Testing token validity...");
-
-      try {
-        const testResponse = await axios.get(
-          "http://localhost:4200/profile/me",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        console.log("✅ Token is valid, user data:", testResponse.data);
-      } catch (testError: any) {
-        console.error("❌ Token validation failed:", testError.response?.data);
-        alert("Your session has expired. Please login again.");
+        alert("Please login first");
         router.push("/login");
         return;
       }
 
-      // Proceed with profile creation
-      const profilePayload = {
-        avatarImage: values.image,
-        name: values.name,
-        about: values.about,
-        socialMediaURL: values.social,
-      };
-
-      console.log("🔍 Debug - Sending payload:", profilePayload);
-
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:4200/profile",
-        profilePayload,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+          avatarImage: values.image,
+          name: values.name,
+          about: values.about,
+          socialMediaURL: values.social,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      console.log("✅ Profile creation successful:", response.data);
-
-      // Refresh user data
       await refreshUser();
-
-      // Small delay to ensure context updates
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 500);
     } catch (error: any) {
-      console.error("❌ Profile creation error:", error);
-
-      // More detailed error logging
-      if (error.response) {
-        console.error("❌ Error response:", {
-          status: error.response.status,
-          data: error.response.data,
-          headers: error.response.headers,
-        });
-      }
-
-      const errorMessage =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        "Failed to save profile. Please try again.";
-
-      alert(errorMessage);
-
-      // If unauthorized, redirect to login
-      if (error.response?.status === 401) {
-        router.push("/login");
-      }
+      alert(error?.response?.data?.message || "Failed to save profile");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="my-[91px] max-w-md mx-auto p-4">
-        <p>Loading user info...</p>
-      </div>
-    );
-  }
-
-  // Show login prompt if no user
-  if (!userProvider?.id) {
-    return (
-      <div className="my-[91px] max-w-md mx-auto p-4">
-        <p>Please login to complete your profile.</p>
-        <Button onClick={() => router.push("/login")} className="mt-4">
-          Go to Login
-        </Button>
-      </div>
-    );
-  }
+  if (loading) return <p className="p-4">Loading user info...</p>;
+  // if (!userProvider?.id)
+  //   return <p className="p-4">Please login to complete your profile.</p>;
 
   return (
     <div className="my-[91px] max-w-md mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Complete Your Profile</h1>
-
-      {/* Debug info - remove in production */}
-      <div className="mb-4 p-2 bg-gray-100 rounded text-sm">
-        <p>
-          <strong>Debug Info:</strong>
-        </p>
-        <p>User ID: {userProvider?.id}</p>
-        <p>Has Profile: {userProvider?.profile ? "Yes" : "No"}</p>
-        <p>Token: {localStorage.getItem("token") ? "Present" : "Missing"}</p>
-      </div>
-
       <Form {...form}>
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
           <FormLabel>Add Photo</FormLabel>
@@ -252,7 +130,6 @@ export const CompleteProfile = () => {
                     onChange={handleImageChange}
                   />
                 </FormControl>
-
                 <div
                   className="outline-dashed flex justify-center items-center w-40 h-40 rounded-full overflow-hidden cursor-pointer"
                   onClick={openFile}
@@ -267,7 +144,6 @@ export const CompleteProfile = () => {
                     "Select Image"
                   )}
                 </div>
-
                 <FormMessage />
               </FormItem>
             )}
