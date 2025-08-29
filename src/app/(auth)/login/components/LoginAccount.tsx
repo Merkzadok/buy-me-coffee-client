@@ -26,7 +26,7 @@ export const LoginAccount = () => {
     setPasswordError("");
 
     try {
-      const response = await axios.post<{ accesstoken: string }>(
+      const response = await axios.post<{ accessToken: string }>(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`,
         {
           email: values.email,
@@ -34,7 +34,7 @@ export const LoginAccount = () => {
         }
       );
 
-      localStorage.setItem("token", response.data.accesstoken);
+      localStorage.setItem("token", response.data.accessToken);
       router.push("/home");
     } catch (error: any) {
       const status = error.response?.status;

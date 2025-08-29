@@ -35,23 +35,6 @@ export const SignUpCreateAccount = () => {
           Choose a username for your page
         </p>
 
-        {/* <Formik
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-          }}
-          onSubmit={(
-            values: Values,
-            { setSubmitting }: FormikHelpers<Values>
-          ) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-            }, 500);
-          }}
-        >
-          <Form className="flex flex-col gap-4">{</Form>
-        </Formik> */}
         {StepComponent[step]}
       </div>
     </div>

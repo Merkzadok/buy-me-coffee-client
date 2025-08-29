@@ -35,7 +35,7 @@ const formSchema = z.object({
 
 type UsernameFieldProps = {
   setStep: Dispatch<SetStateAction<number>>;
-  userId: string; // 👈 ADD THIS TO PASS IN USER ID
+  userId: string;
 };
 
 export function PaymentForm({ setStep, userId }: UsernameFieldProps) {
@@ -67,8 +67,7 @@ export function PaymentForm({ setStep, userId }: UsernameFieldProps) {
       );
 
       if (response.status === 200) {
-        // Success – advance step or redirect
-        setStep((prev) => prev + 1); // or router.push("/success") or similar
+        setStep((prev) => prev + 1);
       } else {
         setError("Something went wrong. Try again.");
       }

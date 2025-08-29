@@ -38,26 +38,6 @@ export type ProfileWithUserNameType = {
   createdAt: string;
   updatedAt: string;
 };
-// {
-//     "id": 19,
-//     "name": "Stromi blogger",
-//     "about": "I’m Stromi-Blogger, a passionate storyteller and thinker exploring ideas through writing.\n✍️ Writing is my way to connect, reflect, and grow.\n🌱 Constantly learning, always evolving.\n🚀 Join me on this journey of discovery and creativity.",
-//     "avatarImage": "https://res.cloudinary.com/duw6cdsyv/image/upload/v1754387357/tjgpaqbfcf6xqenbjdkw.jpg",
-//     "socialMediaURL": "https://stromi-blogger.com",
-//     "backgroundImage": null,
-//     "successMessage": null,
-//     "userId": 20,
-//     "createdAt": "2025-08-05T09:50:40.414Z",
-//     "updatedAt": "2025-08-05T09:50:40.414Z",
-//     "user": {
-//         "username": "Stormi"
-//     }
-// }
-
-// export type DonationUserDataType = {
-//   userProfile: ProfileType;
-//   username: string;
-// };
 
 export type CreateProfileType = {
   profileImage: string;

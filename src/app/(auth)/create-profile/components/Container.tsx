@@ -13,8 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import { ChangeEvent, useState, useEffect, useRef } from "react";
+import { ChangeEvent, useState, useRef } from "react";
 import { useUser } from "@/app/provider/currentUserProvider";
 
 const formSchema = z.object({

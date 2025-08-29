@@ -26,9 +26,8 @@ const UsernameField = ({
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (values: Values) => {
-    setErrorMsg(""); // clear old error
+    setErrorMsg("");
 
-    // ✅ FRONTEND VALIDATION
     if (!values.username.trim()) {
       const message = "Username cannot be empty";
       toast.error(message);
@@ -44,7 +43,7 @@ const UsernameField = ({
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-username`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/check-username`,
         { username: values.username }
       );
 

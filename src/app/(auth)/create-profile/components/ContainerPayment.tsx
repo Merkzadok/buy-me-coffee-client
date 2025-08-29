@@ -9,9 +9,12 @@ export const ContainerPayment = () => {
 
   const handleNext = () => setStep(step + 1);
 
+  // TODO: Replace 'yourUserId' with the actual userId value from your app's context or props
+  const userId = "yourUserId";
+
   const stepComponents = [
     <Container key={0} handleNext={handleNext} />,
-    <PaymentForm key={1} setStep={setStep} />,
+    <PaymentForm key={1} setStep={setStep} userId={userId} />,
   ];
 
   return stepComponents[step];

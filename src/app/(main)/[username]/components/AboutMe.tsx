@@ -1,7 +1,6 @@
 import { Profile } from "@/components/Profile";
 import { RecentSupporters } from "@/components/RecentSupporters";
 import { SocialMedia } from "@/components/SocialMedia";
-import Image from "next/image";
 
 export const AboutMe = () => {
   return (

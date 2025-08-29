@@ -1,7 +1,8 @@
 "use client";
 
 import Lottie from "lottie-react";
-import coffeeAnimation from "/Users/25LP1749/Desktop/buy-me-coffee-client/buy-me-coffee-client/public/Coffee-love.json";
+
+import coffeeAnimation from "@/animation/Coffee-love.json";
 
 export const LoadingProfile = () => {
   return (
