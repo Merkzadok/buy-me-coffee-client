@@ -4,37 +4,73 @@ import { UserType } from "@/lib/types";
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-type userContextType = {
-  userProvider: UserType;
+type UserContextType = {
+  user: UserType;
+  loading: boolean;
+  error: string | null;
+  refreshUser: () => Promise<void>;
+  logout: () => void;
 };
 
-export const UserContext = createContext({} as userContextType);
+const UserContext = createContext({} as UserContextType);
 
 export default function UserContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [userProvider, setUserProvider] = useState({} as UserType);
+  const [user, setUser] = useState({} as UserType);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const getCurrentUserByAccessToken = async () => {
-    const token = localStorage.getItem("token") as string;
-
-    if (!token) return;
-    try {
-      const response = await axios.get(
-        "http://localhost:4200/profile/current-user",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setUserProvider(response?.data?.user);
-    } catch (error) {
-      console.log(error);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("No token found");
+      setLoading(false);
+      return;
     }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data } = await axios.get("http://localhost:4200/profile/me", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      const profile = data.profile;
+
+      if (profile?.user) {
+        setUser({
+          ...profile.user,
+          profile: {
+            id: profile.id,
+            name: profile.name,
+            about: profile.about,
+            avatarImage: profile.avatarImage,
+            socialMediaURL: profile.socialMediaURL,
+            backgroundImage: profile.backgroundImage,
+            successMessage: profile.successMessage,
+          },
+        });
+      } else {
+        setUser({} as UserType);
+      }
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Failed to fetch user data");
+      if (err?.response?.status === 401) setUser({} as UserType);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshUser = async () => getCurrentUserByAccessToken();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser({} as UserType);
+    setError(null);
   };
 
   useEffect(() => {
@@ -42,7 +78,7 @@ export default function UserContextProvider({
   }, []);
 
   return (
-    <UserContext.Provider value={{ userProvider }}>
+    <UserContext.Provider value={{ user, loading, error, refreshUser, logout }}>
       {children}
     </UserContext.Provider>
   );

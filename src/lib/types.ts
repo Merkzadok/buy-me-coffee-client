@@ -65,4 +65,6 @@ export type UserType = {
   profileId: number;
   createdAt: string;
   updatedAt: string;
+  profilePicture?: string;
+  profile?: ProfileType;
 };

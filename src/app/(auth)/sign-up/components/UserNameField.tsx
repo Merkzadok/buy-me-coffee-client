@@ -12,6 +12,7 @@ export type UsernameFieldProps = {
   setData: Dispatch<SetStateAction<any>>;
   data: any;
 };
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4200";
 
 interface Values {
   username: string;

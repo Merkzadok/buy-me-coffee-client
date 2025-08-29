@@ -9,7 +9,7 @@ import { LoadingProfile } from "@/components/LoadingProfile";
 
 type EmailPasswordFieldsProps = {
   setStep: Dispatch<SetStateAction<number>>;
-  data: any;
+  data: string; // username string from previous step
   setData: Dispatch<SetStateAction<any>>;
 };
 
@@ -20,32 +20,40 @@ interface Values {
 
 const EmailPasswordFields = ({
   setStep,
-  data,
+  data: username,
   setData,
 }: EmailPasswordFieldsProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values: Values) => {
+    if (!username) {
+      console.error("Username missing from previous step");
+      return;
+    }
+
     setLoading(true);
+
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up`,
         {
           email: values.email,
           password: values.password,
-          username: data,
+          username: username, // use string directly
         }
       );
 
-      if (response.status === 200) {
-        setData({ email: values.email, password: values.password });
+      if (response.status === 201 && response.data.accessToken) {
+        const token = response.data.accessToken;
+
+        // Move to next step or redirect user
         router.push("/login");
-      } else if (response.status === 500) {
-        console.log("username already taken");
+      } else {
+        console.error("Unexpected response from signup:", response.data);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("Error during sign-up", error);
     } finally {
       setLoading(false);
     }
@@ -61,7 +69,6 @@ const EmailPasswordFields = ({
 
   return (
     <>
-      {/* Full-screen loading overlay */}
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
           <LoadingProfile />
@@ -81,6 +88,7 @@ const EmailPasswordFields = ({
             value={formik.values.email}
             onChange={formik.handleChange}
             disabled={loading}
+            required
           />
         </div>
 
@@ -99,6 +107,7 @@ const EmailPasswordFields = ({
             value={formik.values.password}
             onChange={formik.handleChange}
             disabled={loading}
+            required
           />
         </div>
 
@@ -111,7 +120,7 @@ const EmailPasswordFields = ({
               : "bg-black hover:bg-sky-100 text-white hover:text-black"
           }`}
         >
-          Continue
+          {loading ? "Loading..." : "Continue"}
         </button>
       </form>
     </>

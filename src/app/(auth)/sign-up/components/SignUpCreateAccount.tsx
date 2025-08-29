@@ -7,8 +7,7 @@ import UsernameField from "./UserNameField";
 
 export const SignUpCreateAccount = () => {
   const [step, setStep] = useState<number>(0);
-
-  const [data, setData] = useState<string>();
+  const [data, setData] = useState<string>("");
 
   const StepComponent = [
     <UsernameField
