@@ -1,9 +1,9 @@
-import SignUpPage from "./(auth)/sign-up/page";
+import LoginPage from "./(auth)/login/page";
 
 const Page = () => {
   return (
     <div>
-      <SignUpPage />
+      <LoginPage />
     </div>
   );
 };

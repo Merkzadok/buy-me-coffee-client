@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { ChangeEvent, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/provider/currentUserProvider";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   image: z.string().min(1, { message: "Please upload an image!" }),
@@ -99,6 +100,8 @@ export const CompleteProfile = () => {
       );
 
       await refreshUser();
+      toast.success("Profile created successfully!");
+      router.push("/home");
     } catch (error: any) {
       alert(error?.response?.data?.message || "Failed to save profile");
     } finally {
@@ -107,8 +110,6 @@ export const CompleteProfile = () => {
   };
 
   if (loading) return <p className="p-4">Loading user info...</p>;
-  // if (!userProvider?.id)
-  //   return <p className="p-4">Please login to complete your profile.</p>;
 
   return (
     <div className="my-[91px] max-w-md mx-auto p-4">

@@ -8,6 +8,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { LoadingProfile } from "@/components/LoadingProfile";
 import { SignUpButton } from "../../sign-up/components/SignUpButton";
+import { useUser } from "@/app/provider/currentUserProvider";
+import { UserType } from "@/lib/types";
 
 interface Values {
   email: string;
@@ -16,19 +18,35 @@ interface Values {
 
 export const LoginAccount = () => {
   const router = useRouter();
+  const { setUser } = useUser();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values: Values) => {
     setLoading(true);
 
     try {
-      const response = await axios.post<{ accessToken: string }>(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`,
-        values
-      );
+      const response = await axios.post<{
+        accessToken: string;
+        user: UserType;
+      }>(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`, values);
 
-      localStorage.setItem("token", response.data.accessToken);
-      router.push("/home");
+      const { accessToken, user } = response.data;
+
+      localStorage.setItem("token", accessToken);
+
+      setUser(user);
+
+      toast.success("Тавтай морил! 🎉", {
+        description: "Дахиад уулзах таатай байна!",
+        duration: 1000,
+      });
+
+      if (user.profile?.id) {
+        router.push("/home");
+      } else {
+        router.push("/create-profile");
+      }
+      console.log(user);
     } catch (error: any) {
       const status = error.response?.status;
       const message = error.response?.data?.message?.toLowerCase() || "";

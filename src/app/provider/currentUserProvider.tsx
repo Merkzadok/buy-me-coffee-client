@@ -5,11 +5,12 @@ import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type UserContextType = {
-  user: UserType;
+  user: UserType | null;
   loading: boolean;
   error: string | null;
   refreshUser: () => Promise<void>;
   logout: () => void;
+  setUser: (user: UserType | null) => void;
 };
 
 const UserContext = createContext({} as UserContextType);
@@ -19,7 +20,7 @@ export default function UserContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState({} as UserType);
+  const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,7 +79,9 @@ export default function UserContextProvider({
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, loading, error, refreshUser, logout }}>
+    <UserContext.Provider
+      value={{ user, loading, error, refreshUser, logout, setUser }}
+    >
       {children}
     </UserContext.Provider>
   );

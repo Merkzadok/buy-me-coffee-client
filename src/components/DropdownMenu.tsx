@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,13 +19,18 @@ type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 export function DropdownMenuCheckboxes() {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/");
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {" "}
-          <ChevronDown />{" "}
+          <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -32,9 +38,12 @@ export function DropdownMenuCheckboxes() {
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
           checked={showStatusBar}
-          onCheckedChange={setShowStatusBar}
+          onCheckedChange={() => {
+            setShowStatusBar((prev) => !prev);
+            handleLogout();
+          }}
         >
-          Log out{" "}
+          Log out
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

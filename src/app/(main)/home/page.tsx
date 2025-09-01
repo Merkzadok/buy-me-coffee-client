@@ -6,32 +6,11 @@ import UserProfile from "./components/UserProfile";
 import Transaction from "./components/Transaction";
 import { AmountPrice } from "./components/AmountPrice";
 import { useEffect, useState } from "react";
-import {
-  CurrentUserResponse,
-  ReceivedDonation,
-} from "@/interface/user.interface";
+import { ReceivedDonation } from "@/interface/user.interface";
 export default function Home() {
   const [amount, setAmount] = useState<string>("");
-  const [time, setTime] = useState<0 | 30 | 90>(30);
 
-  const [userData, setUserData] = useState<CurrentUserResponse>();
   const [donation, setDonation] = useState<ReceivedDonation[]>([]);
-
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const res = await fetch(`http://localhost:4200/profile/2}`);
-  //       const data = await res.json();
-
-  //       console.log(data);
-  //       setUserData(data);
-  //     } catch (err) {
-  //       console.error("Fetch error:", err);
-  //     }
-  //   };
-
-  //   getUserData();
-  // }, []);
 
   useEffect(() => {
     const getDonations = async () => {
